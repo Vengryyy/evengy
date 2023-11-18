@@ -165,7 +165,7 @@ dependencies = [
 [[package]]
 name = "command_attr"
 version = "0.4.2"
-source = "git+https://github.com/nshout/serenity?branch=current#3375c77d2ab16afd04aa7debfe37425ffcf1137b"
+source = "git+https://github.com/nshout/serenity?branch=current#d3e2259c8eaa8c7b91aca301eb4a70b56cc97776"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -352,7 +352,7 @@ checksum = "5443807d6dff69373d433ab9ef5378ad8df50ca6298caf15de6e52e24aaf54d5"
 
 [[package]]
 name = "evengy"
-version = "0.0.1"
+version = "0.0.2"
 dependencies = [
  "num_cpus",
  "poise",
@@ -747,9 +747,9 @@ dependencies = [
 
 [[package]]
 name = "ntapi"
-version = "0.3.7"
+version = "0.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c28774a7fd2fbb4f0babd8237ce554b73af68021b5f695a3cebd6c59bac0980f"
+checksum = "e8a3895c6391c39d7fe7ebc444a87eb2991b2a0bc718fdabd071eec617fc68e4"
 dependencies = [
  "winapi",
 ]
@@ -1224,7 +1224,7 @@ dependencies = [
 [[package]]
 name = "serenity"
 version = "0.11.7"
-source = "git+https://github.com/nshout/serenity?branch=current#3375c77d2ab16afd04aa7debfe37425ffcf1137b"
+source = "git+https://github.com/nshout/serenity?branch=current#d3e2259c8eaa8c7b91aca301eb4a70b56cc97776"
 dependencies = [
  "async-trait",
  "async-tungstenite",
@@ -1349,9 +1349,9 @@ dependencies = [
 
 [[package]]
 name = "sysinfo"
-version = "0.20.5"
+version = "0.29.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e223c65cd36b485a34c2ce6e38efa40777d31c4166d9076030c74cdcf971679f"
+checksum = "0a18d114d420ada3a891e6bc8e96a2023402203296a47cdd65083377dad18ba5"
 dependencies = [
  "cfg-if",
  "core-foundation-sys",

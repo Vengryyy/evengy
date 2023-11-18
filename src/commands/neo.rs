@@ -2,7 +2,7 @@ use serenity::framework::standard::CommandResult;
 use serenity::model::channel::Message;
 use serenity::prelude::*;
 use serenity::framework::standard::macros::command;
-use sysinfo::{ProcessExt, SystemExt, ProcessorExt};
+use sysinfo::{ProcessExt, SystemExt, CpuExt};
 use uptime_lib;
 use num_cpus;
 use whoami;
@@ -13,10 +13,10 @@ async fn neo(ctx: &Context, msg: &Message) -> CommandResult {
     sys.refresh_all();
 
     let num_of_cpus = num_cpus::get_physical();
-    let cpu_name = sys.processors()[0].brand();
-    let cpu_usage = format!("{}/{}", (sys.global_processor_info().cpu_usage().round() as usize) * num_of_cpus, 100 * num_of_cpus);
-    let total_memory = sys.total_memory() / 1024;
-    let used_memory = sys.used_memory() / 1024;
+    let cpu_name = sys.cpus()[0].brand();
+    let cpu_usage = format!("{}/{}", (sys.global_cpu_info().cpu_usage().round() as usize) * num_of_cpus, 100 * num_of_cpus);
+    let total_memory = sys.total_memory() / (1024 * 1024);
+    let used_memory = sys.used_memory() / (1024 * 1024);
     let tmg = total_memory / 1024;
     let umg = used_memory / 1024;
     let user_name = whoami::username();
@@ -39,13 +39,18 @@ async fn neo(ctx: &Context, msg: &Message) -> CommandResult {
 
     let mut processes = sys.processes().values().collect::<Vec<_>>();
     processes.sort_by(|a, b| b.memory().cmp(&a.memory()));
-    let high_process = format!("{} - {} MB", processes[0].name(), processes[0].memory() / 1024);
+    let high_process = format!("{} - {} MB", processes[0].name(), processes[0].memory() / (1024 * 1024));
+
+    let logo_line1 = String::from("┍-┑┍--┑");
+    let logo_line2 = String::from("┕e┙┕ve┙");
+    let logo_line3 = String::from("┍ng┑┍y┑");
+    let logo_line4 = String::from("┕--┙┕-┙");
 
     let info_text = format!("```ansi
-[34;49m┍-┑┍--┑[0m [35mCPU    : [37m{} ({}%)
-[34;49m┕e┙┕ve┙[0m [35mRAM    : [37m{}/{} MB ({}/{} GB) {}
-[34;49m┍ng┑┍y┑[0m [35mUser   : [37m{}
-[34;49m┕--┙┕-┙[0m [35mUpTime : [37m{}```", cpu_name, cpu_usage, used_memory, total_memory, umg, tmg, high_process, user_name, up_time);
+[34;49m{logo_line1}[0m [35mCPU    : [37m{} ({}%)
+[34;49m{logo_line2}[0m [35mRAM    : [37m{}/{} MB ({}/{} GB) {}
+[34;49m{logo_line3}[0m [35mUser   : [37m{}
+[34;49m{logo_line4}[0m [35mUpTime : [37m{}```", cpu_name, cpu_usage, used_memory, total_memory, umg, tmg, high_process, user_name, up_time);
 
     msg.channel_id.say(&ctx.http, info_text).await?;
     msg.delete(&ctx.http).await?;
