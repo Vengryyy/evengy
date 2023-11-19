@@ -7,6 +7,13 @@ use uptime_lib;
 use num_cpus;
 use whoami;
 
+const LOGO: [&str; 4] = [
+        "┍-┑┍--┑",
+        "┕e┙┕ve┙",
+        "┍ng┑┍y┑",
+        "┕--┙┕-┙"
+    ];
+
 #[command]
 async fn neo(ctx: &Context, msg: &Message) -> CommandResult {
     let mut sys = sysinfo::System::new_all();
@@ -41,16 +48,11 @@ async fn neo(ctx: &Context, msg: &Message) -> CommandResult {
     processes.sort_by(|a, b| b.memory().cmp(&a.memory()));
     let high_process = format!("{} - {} MB", processes[0].name(), processes[0].memory() / (1024 * 1024));
 
-    let logo_line1 = String::from("┍-┑┍--┑");
-    let logo_line2 = String::from("┕e┙┕ve┙");
-    let logo_line3 = String::from("┍ng┑┍y┑");
-    let logo_line4 = String::from("┕--┙┕-┙");
-
     let info_text = format!("```ansi
-[34;49m{logo_line1}[0m [35mCPU    : [37m{} ({}%)
-[34;49m{logo_line2}[0m [35mRAM    : [37m{}/{} MB ({}/{} GB) {}
-[34;49m{logo_line3}[0m [35mUser   : [37m{}
-[34;49m{logo_line4}[0m [35mUpTime : [37m{}```", cpu_name, cpu_usage, used_memory, total_memory, umg, tmg, high_process, user_name, up_time);
+[34;49m{}[0m [35mCPU    : [37m{} ({}%)
+[34;49m{}[0m [35mRAM    : [37m{}/{} MB ({}/{} GB) {}
+[34;49m{}[0m [35mUser   : [37m{}
+[34;49m{}[0m [35mUpTime : [37m{}```", LOGO[0], cpu_name, cpu_usage, LOGO[1], used_memory, total_memory, umg, tmg, high_process, LOGO[2], user_name, LOGO[3], up_time);
 
     msg.channel_id.say(&ctx.http, info_text).await?;
     msg.delete(&ctx.http).await?;
