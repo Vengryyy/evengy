@@ -7,12 +7,7 @@ use uptime_lib;
 use num_cpus;
 use whoami;
 
-const LOGO: [&str; 4] = [
-        "┍-┑┍--┑",
-        "┕e┙┕ve┙",
-        "┍ng┑┍y┑",
-        "┕--┙┕-┙"
-    ];
+use crate::utils::get_json_value;
 
 #[command]
 async fn neo(ctx: &Context, msg: &Message) -> CommandResult {
@@ -48,14 +43,28 @@ async fn neo(ctx: &Context, msg: &Message) -> CommandResult {
     processes.sort_by(|a, b| b.memory().cmp(&a.memory()));
     let high_process = format!("{} - {} MB", processes[0].name(), processes[0].memory() / (1024 * 1024));
 
+    let data = get_json_value("config.json").await.unwrap();
+    let logo1 = data["commands"]["neo"]["logo1"].as_str().unwrap();
+    let logo2 = data["commands"]["neo"]["logo2"].as_str().unwrap();
+    let logo3 = data["commands"]["neo"]["logo3"].as_str().unwrap();
+    let logo4 = data["commands"]["neo"]["logo4"].as_str().unwrap();
+
     let info_text = format!("```ansi
 [34;49m{}[0m [35mCPU    : [37m{} ({}%)
 [34;49m{}[0m [35mRAM    : [37m{}/{} MB ({}/{} GB) {}
 [34;49m{}[0m [35mUser   : [37m{}
-[34;49m{}[0m [35mUpTime : [37m{}```", LOGO[0], cpu_name, cpu_usage, LOGO[1], used_memory, total_memory, umg, tmg, high_process, LOGO[2], user_name, LOGO[3], up_time);
+[34;49m{}[0m [35mUpTime : [37m{}```", logo1, cpu_name, cpu_usage, logo2, used_memory, total_memory, umg, tmg, high_process, logo3, user_name, logo4, up_time);
 
-    msg.channel_id.say(&ctx.http, info_text).await?;
-    msg.delete(&ctx.http).await?;
+    let _for = data["commands"]["help"]["for"].as_u64().unwrap();
+    let id = data["id"].as_u64().unwrap();
+
+    if _for == 1 {
+        if msg.author.id == id {
+            msg.reply(&ctx.http, info_text).await?;
+        }
+    } else if _for == 2 {
+        msg.reply(&ctx.http, info_text).await?;
+    }
 
     Ok(())
 }

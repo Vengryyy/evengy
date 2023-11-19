@@ -1,5 +1,3 @@
-use std::io;
-
 use serenity::async_trait;
 use serenity::model::channel::ReactionType;
 use serenity::prelude::*;
@@ -7,19 +5,20 @@ use serenity::model::{channel::Message, gateway::Ready};
 use serenity::framework::standard::macros::group;
 use serenity::framework::standard::StandardFramework;
 
-use crate::commands::{neo::NEO_COMMAND, why::WHY_COMMAND};
-use rand::{Rng, rngs::StdRng, SeedableRng};
+mod utils;
+use utils::get_json_value;
 
-use std::fs::File;
-use std::io::{BufRead, BufReader};
+use crate::commands::{neo::NEO_COMMAND, why::WHY_COMMAND, help::HELP_COMMAND};
+use rand::{Rng, rngs::StdRng, SeedableRng};
 
 mod commands {
     pub mod neo;
     pub mod why;
+    pub mod help;
 }
 
 #[group]
-#[commands(neo, why)]
+#[commands(neo, why, help)]
 struct General;
 
 struct Handler;
@@ -47,37 +46,16 @@ impl EventHandler for Handler {
     }
 }
 
-async fn read_token() -> io::Result<String> {
-    let file = File::open("token")?;
-    let mut reader = BufReader::new(file);
-    let mut line = String::new();
-    reader.read_line(&mut line)?;
-    Ok(line)
-}
-
 
 #[tokio::main]
 async fn main() {
+    let data = get_json_value("config.json").await.unwrap();
+    let token = data["token"].as_str().unwrap();
+    let prefix = data["prefix"].as_str().unwrap();
+
     let framework = StandardFramework::new()
-        .configure(|c| c.prefix("~")) // set the bot's prefix to "### "
+        .configure(|c| c.prefix(prefix))
         .group(&GENERAL_GROUP);
-
-    // println!("Please, place your discord account token here:");
-
-    // let mut token = String::new();
-
-    let token = match read_token().await {
-        Ok(token) => token,
-        Err(e) => {
-            println!("An error occurred while reading the token: {}", e);
-            return;
-        },
-    };
-
-    // match io::stdin().read_line(&mut token) {
-    //     Ok(_) => {},
-    //     Err(e) => println!("Error! {e}")
-    // }
 
     let intents = GatewayIntents::non_privileged() | GatewayIntents::MESSAGE_CONTENT;
     let mut client = Client::builder(token, intents)
@@ -85,8 +63,6 @@ async fn main() {
         .framework(framework)
         .await
         .expect("Error creating client");
-
-    // start listening for events by starting a single shard
     if let Err(why) = client.start().await {
         println!("An error occurred while running the client: {:?}", why);
     }

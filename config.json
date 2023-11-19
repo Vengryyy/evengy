@@ -1,0 +1,21 @@
+{
+	"token": "PLACE YOUR DISCORD ACCOUNT TOKEN HERE",
+	"id": PLACE YOUR DISCORD ID HERE,
+    "prefix": "~",
+	"commands": {
+        "neo": {
+        	"for": 1,
+            "logo1": "┍-┑┍--┑",
+            "logo2": "┕e┙┕ve┙",
+            "logo3": "┍ng┑┍y┑",
+            "logo4": "┕--┙┕-┙"
+        },
+        "help": {
+        	"for": 1,
+            "text": "test"
+        },
+        "why": {
+        	"for": 1
+        }
+    }
+}
