@@ -12,8 +12,8 @@ async fn neo(ctx: &Context, msg: &Message) -> CommandResult {
     let mut sys = sysinfo::System::new_all();
     sys.refresh_all();
 
-    let num_of_cpus = num_cpus::get_physical();
-    let cpu_name = sys.cpus()[0].brand();
+    let num_of_cpus = num_cpus::get();
+    let cpu_name = sys.global_cpu_info().brand();//sys.cpus()[0].brand();
     let cpu_usage = format!("{}/{}", (sys.global_cpu_info().cpu_usage().round() as usize) * num_of_cpus, 100 * num_of_cpus);
     let total_memory = sys.total_memory() / (1024 * 1024);
     let used_memory = sys.used_memory() / (1024 * 1024);
