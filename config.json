@@ -12,7 +12,7 @@
         },
         "help": {
         	"for": 1,
-            "text": "test"
+            "style": "default"
         },
         "why": {
         	"for": 1
